@@ -131,4 +131,63 @@ mod tests {
             println!("{}", summary.to_dot_string());
         }
     }
+
+    #[test]
+    fn division_test() {
+        const QKT_LATENCY: u64 = 11;
+        const REDUCE_LATENCY: u64 = 24;
+        const REDUCE_II: u64 = 2;
+        const BINARY_LATENCY: u64 = 8;
+        const MATVEC_LATENCY: u64 = 12;
+        const INIT_INTERVAL: u64 = 1;
+
+        const SEQ_LEN: u64 = 64;
+        const SEQ_LEN_F64: f64 = SEQ_LEN as f64;
+        let chan_size_long = (SEQ_LEN as usize) + 2;
+
+        let chan_size = 2; // FIFO Depth
+
+        let mut ctx = ProgramBuilder::default();
+
+        // Generators
+        let (qtk_sender, qtk_receiver) = ctx.bounded::<f64>((SEQ_LEN * SEQ_LEN) as usize);
+        // In spatial unit test, it reads the whole SRAM[N] N times.
+        // To allow the same effecet, we model this through a FIFO[N*N].
+        let qkt_iter = || (0..(SEQ_LEN * SEQ_LEN)).map(|i| (i as f64) * 0.01_f64);
+        ctx.add_child(GeneratorContext::new(qkt_iter, qtk_sender)); // Q : [1,D] shaped vectors
+
+        let (rowsum_sender, rowsum_recv) = ctx.bounded::<f64>((SEQ_LEN) as usize);
+        let rowsum_iter = || (0..(SEQ_LEN)).map(|i| (i as f64) * 0.01_f64);
+        ctx.add_child(GeneratorContext::new(rowsum_iter, rowsum_sender)); // Q : [1,D] shaped vectors
+
+        let (output_sender, output_receiver) = ctx.bounded::<f64>((SEQ_LEN * SEQ_LEN) as usize);
+        ctx.add_child(Binary::<f64>::new(
+            qtk_receiver,
+            rowsum_recv,
+            output_sender,
+            BINARY_LATENCY,
+            INIT_INTERVAL,
+            SEQ_LEN,
+            SEQ_LEN,
+            BinaryOpType::Div,
+        ));
+        // Checkers
+        let out_iter1 = || (0..(SEQ_LEN * SEQ_LEN)).map(|_i| (1_f64));
+        ctx.add_child(ApproxCheckerContext::new(
+            out_iter1,
+            output_receiver,
+            |a, b| true,
+        ));
+
+        let initialized = ctx.initialize(Default::default()).unwrap();
+        #[cfg(feature = "dot")]
+        println!("{}", initialized.to_dot_string());
+
+        let summary = initialized.run(Default::default());
+        dbg!(summary.elapsed_cycles());
+        #[cfg(feature = "dot")]
+        {
+            println!("{}", summary.to_dot_string());
+        }
+    }
 }
