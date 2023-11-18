@@ -82,7 +82,7 @@ mod tests {
     #[test]
     fn reduce_test() {
         const QKT_LATENCY: u64 = 11;
-        const REDUCE_LATENCY: u64 = 24;
+        const REDUCE_LATENCY: u64 = 23;
         const REDUCE_II: u64 = 2;
         const BINARY_LATENCY: u64 = 8;
         const MATVEC_LATENCY: u64 = 12;
