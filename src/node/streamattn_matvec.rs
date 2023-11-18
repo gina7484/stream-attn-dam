@@ -49,9 +49,9 @@ where
 {
     fn init(&mut self) {}
     fn run(&mut self) -> () {
-        self.time.incr_cycles(4);
+        //self.time.incr_cycles(4);
         for _i in 0..self.outer_loop_bound {
-            self.time.incr_cycles(4);
+            //self.time.incr_cycles(4);
             let s_deq = self.in1_stream.dequeue(&self.time);
             let v_deq = self.in2_stream.dequeue(&self.time);
 

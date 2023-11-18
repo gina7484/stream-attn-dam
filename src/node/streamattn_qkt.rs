@@ -51,7 +51,7 @@ where
     fn init(&mut self) {}
 
     fn run(&mut self) -> () {
-        self.time.incr_cycles(4);
+        //self.time.incr_cycles(4);
         for _i in 0..self.seq_len {
             let _ = self.q.peek_next(&self.time);
             let _ = self.kt.peek_next(&self.time);
@@ -59,7 +59,7 @@ where
             let q_deq = self.q.dequeue(&self.time);
             match q_deq {
                 Ok(q) => {
-                    self.time.incr_cycles(4);
+                    //self.time.incr_cycles(4);
                     for _i in 0..self.seq_len {
                         let kt_deq = self.kt.dequeue(&self.time);
                         match kt_deq {

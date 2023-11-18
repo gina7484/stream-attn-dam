@@ -54,9 +54,9 @@ where
 
 impl<A: DAMType + num::Num> Context for Binary<A> {
     fn run(&mut self) {
-        self.time.incr_cycles(4);
+        //self.time.incr_cycles(4);
         for _i in 0..self.outer_loop_bound {
-            self.time.incr_cycles(4);
+            //self.time.incr_cycles(4);
             let _ = self.in1_stream.peek_next(&self.time);
             let _ = self.in2_stream.peek_next(&self.time);
             let in1_deq = self.in1_stream.dequeue(&self.time);
