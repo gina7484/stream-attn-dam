@@ -190,4 +190,65 @@ mod tests {
             println!("{}", summary.to_dot_string());
         }
     }
+
+    #[test]
+    fn matvec_test() {
+        const QKT_LATENCY: u64 = 11;
+        const REDUCE_LATENCY: u64 = 23;
+        const REDUCE_II: u64 = 2;
+        const BINARY_LATENCY: u64 = 8;
+        const MATVEC_LATENCY: u64 = 13;
+        const MATVEC_II: u64 = 2;
+        const INIT_INTERVAL: u64 = 1;
+
+        const SEQ_LEN: u64 = 64;
+
+        let chan_size = 2; // FIFO Depth
+
+        let mut ctx: ProgramBuilder<'_> = ProgramBuilder::default();
+
+        // Generators
+        // QKOut = FIFO[T](N*N)
+        let (qtk_sender, qtk_receiver) = ctx.bounded::<f64>((SEQ_LEN * SEQ_LEN) as usize);
+        let qkt_iter = || (0..(SEQ_LEN * SEQ_LEN)).map(|i| (i as f64) * 0.01_f64);
+        ctx.add_child(GeneratorContext::new(qkt_iter, qtk_sender)); // Q : [1,D] shaped vectors
+
+        // V = SRAM[T](N) -> As this is a SRAM where we read N*N times, this will be a generator with a N*N long iter
+        let (v_sender, v_receiver) = ctx.bounded::<f64>((SEQ_LEN * SEQ_LEN) as usize);
+        let v_iter = || (0..(SEQ_LEN * SEQ_LEN)).map(|i| (i as f64) * 0.01_f64);
+        ctx.add_child(GeneratorContext::new(v_iter, v_sender)); // Q : [1,D] shaped vectors
+
+        // QKT & Exp block
+        let (matvec_sender, matvec_receiver) = ctx.bounded::<f64>((SEQ_LEN) as usize);
+
+        ctx.add_child(MatVecProd::new(
+            qtk_receiver,
+            v_receiver,
+            matvec_sender,
+            MATVEC_LATENCY,
+            MATVEC_II,
+            SEQ_LEN,
+            SEQ_LEN,
+        ));
+
+        // Checkers
+        // output = FIFO[T](N)
+        let out_iter1 = || (0..(SEQ_LEN)).map(|_i| (1_f64));
+        ctx.add_child(ApproxCheckerContext::new(
+            out_iter1,
+            matvec_receiver,
+            |a, b| true,
+        ));
+
+        let initialized = ctx.initialize(Default::default()).unwrap();
+        #[cfg(feature = "dot")]
+        println!("{}", initialized.to_dot_string());
+
+        let summary = initialized.run(Default::default());
+        dbg!(summary.elapsed_cycles());
+        #[cfg(feature = "dot")]
+        {
+            println!("{}", summary.to_dot_string());
+        }
+    }
 }
