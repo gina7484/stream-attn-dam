@@ -6,7 +6,7 @@ mod tests {
     };
 
     use crate::node::{
-        streamattn_bin::{Binary, BinaryOpType},
+        streamattn_binary::{Binary, BinaryOpType},
         streamattn_matvec::MatVecProd,
         streamattn_qkt::QKTExp,
         streamattn_reduce::{ReduceOp, ReduceOpType},
