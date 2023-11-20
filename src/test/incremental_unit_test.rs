@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use dam::{
-        simulation::ProgramBuilder,
+        simulation::{InitializationOptions, InitializationOptionsBuilder, ProgramBuilder},
         utility_contexts::{ApproxCheckerContext, GeneratorContext},
     };
 
@@ -191,7 +191,7 @@ mod tests {
         const MATVEC_II: u64 = 2;
         const INIT_INTERVAL: u64 = 1;
 
-        const SEQ_LEN: u64 = 128;
+        const SEQ_LEN: u64 = 4096;
 
         let chan_size = 2; // FIFO Depth
 
@@ -203,7 +203,8 @@ mod tests {
         let q_iter = || (0..(SEQ_LEN)).map(|i| (i as f64) * 0.01_f64);
         ctx.add_child(GeneratorContext::new(q_iter, q_sender)); // Q : [1,D] shaped vectors
 
-        // K = SRAM[T](N)-> As this is a SRAM where we read N*N times, this will be a generator with a N*N long iter
+        // K = SRAM[T](N)-> As this is a SRAM where we read N*N times,
+        // this will be a generator with a N*N long iter
         let (kt_sender, kt_receiver) = ctx.bounded::<f64>((SEQ_LEN * SEQ_LEN) as usize);
         let kt_iter =
             || (0..(SEQ_LEN * SEQ_LEN)).map(|i| if i % SEQ_LEN == 0 { 0.11_f64 } else { 0.1_f64 });
@@ -289,7 +290,15 @@ mod tests {
             |a, b| true,
         ));
 
-        let initialized = ctx.initialize(Default::default()).unwrap();
+        let flavor_inf: bool = false;
+        let initialized = ctx
+            .initialize(
+                InitializationOptionsBuilder::default()
+                    .run_flavor_inference(flavor_inf)
+                    .build()
+                    .unwrap(),
+            )
+            .unwrap();
         #[cfg(feature = "dot")]
         println!("{}", initialized.to_dot_string());
 
