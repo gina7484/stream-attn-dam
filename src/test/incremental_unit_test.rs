@@ -1,7 +1,9 @@
 #[cfg(test)]
 mod tests {
     use dam::{
-        simulation::{InitializationOptions, InitializationOptionsBuilder, ProgramBuilder},
+        simulation::{
+            DotConvertible, InitializationOptions, InitializationOptionsBuilder, ProgramBuilder,
+        },
         utility_contexts::{ApproxCheckerContext, GeneratorContext},
     };
 
@@ -191,7 +193,7 @@ mod tests {
         const MATVEC_II: u64 = 2;
         const INIT_INTERVAL: u64 = 1;
 
-        const SEQ_LEN: u64 = 4096;
+        const SEQ_LEN: u64 = 16384;
 
         let chan_size = 2; // FIFO Depth
 

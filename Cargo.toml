@@ -12,3 +12,8 @@ ndarray = "0.15.6"
 crossbeam = "0.8.2"
 derive_more = "0.99.17"
 thiserror = "1.0.50"
+graphviz-rust = {version = "0.6.6", optional = true}
+
+[features]
+default = ["dot"]
+dot = ["dep:graphviz-rust"]

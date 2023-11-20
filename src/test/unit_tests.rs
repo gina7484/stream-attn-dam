@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use dam::{
-        simulation::ProgramBuilder,
+        simulation::{DotConvertible, ProgramBuilder},
         utility_contexts::{ApproxCheckerContext, GeneratorContext},
     };
 
