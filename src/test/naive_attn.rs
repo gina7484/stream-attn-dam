@@ -138,7 +138,7 @@ mod tests {
         ctx.add_child(ApproxCheckerContext::new(
             out_iter1,
             matvec_receiver,
-            |a, b| true,
+            |_a, _b| true,
         ));
 
         let flavor_inf: bool = false;
