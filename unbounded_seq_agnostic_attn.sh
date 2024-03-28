@@ -1,0 +1,1 @@
+cargo test --release --package stream-attn-dam --lib -- 512 test::seq_agnostic::tests::unbounded_seq_agnostic_attn --exact --nocapture
