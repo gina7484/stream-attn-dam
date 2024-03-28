@@ -139,7 +139,8 @@ mod tests {
         // println!("{}", initialized.to_dot_string());
 
         let summary = initialized.run(Default::default());
-        dbg!(summary.elapsed_cycles());
+        println!("elapsed cycles: {}",summary.elapsed_cycles().unwrap());
+        // dbg!(summary.elapsed_cycles());
         // #[cfg(feature = "dot")]
         // {
         //     println!("{}", summary.to_dot_string());
@@ -267,7 +268,8 @@ mod tests {
         // println!("{}", initialized.to_dot_string());
 
         let summary = initialized.run(Default::default());
-        dbg!(summary.elapsed_cycles());
+        println!("elapsed cycles: {}",summary.elapsed_cycles().unwrap());
+        // dbg!(summary.elapsed_cycles());
         // #[cfg(feature = "dot")]
         // {
         //     println!("{}", summary.to_dot_string());
