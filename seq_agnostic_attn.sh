@@ -2,14 +2,15 @@
 
 run_single() {
     echo "Running sequence-length-agnostic-attention for $LEN with BOUNDED channel depths"
-    #cargo test --release --package stream-attn-dam --lib -- $LEN test::seq_agnostic::tests::bounded_seq_agnostic_attn --exact --nocapture > bounded_run_$LEN.txt
+    cargo test --release --package stream-attn-dam --lib -- $LEN test::seq_agnostic::tests::bounded_seq_agnostic_attn --exact --nocapture > bounded_run_$LEN.txt
     echo "Running sequence-length-agnostic-attention for $LEN with INFINITE channel depths"
     cargo test --release --package stream-attn-dam --lib -- $LEN test::seq_agnostic::tests::unbounded_seq_agnostic_attn --exact --nocapture > unbounded_run_$LEN.txt
-    #BOUNDED="$(grep Simulated bounded_run_$LEN.txt)"
+    BOUNDED="$(grep Simulated bounded_run_$LEN.txt)"
     INFINITE="$(grep Simulated unbounded_run_$LEN.txt)"
-    #echo "[BOUNDED]  $BOUNDED"
+    echo "[BOUNDED]  $BOUNDED"
     echo "[INFINITE] $INFINITE"
     echo ""
+    rm bounded_run_$LEN.txt unbounded_run_$LEN.txt
 }
 
 cd /home/dam/dam-experiments/stream-attn-dam/
