@@ -154,7 +154,7 @@ mod tests {
         // println!("{}", initialized.to_dot_string());
 
         let summary = initialized.run(Default::default());
-        println!("elapsed cycles: {}",summary.elapsed_cycles().unwrap());
+        println!("Simulated Cycles: {}",summary.elapsed_cycles().unwrap());
         // dbg!(summary.elapsed_cycles());
         // #[cfg(feature = "dot")]
         // {
