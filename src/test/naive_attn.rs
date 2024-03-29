@@ -50,19 +50,19 @@ mod tests {
 
         // Generators
         // Q = FIFO[T](N)
-        let (q_sender, q_receiver) = ctx.bounded::<f64>(seq_len as usize);
+        let (q_sender, q_receiver) = ctx.bounded::<f64>(16 as usize);
         let q_iter = || (0..(seq_len)).map(|i| (i as f64) * 0.01_f64);
         ctx.add_child(GeneratorContext::new(q_iter, q_sender)); // Q : [1,D] shaped vectors
 
         // K = SRAM[T](N)-> As this is a SRAM where we read N*N times,
         // this will be a generator with a N*N long iter
-        let (kt_sender, kt_receiver) = ctx.bounded::<f64>((seq_len * seq_len) as usize);
+        let (kt_sender, kt_receiver) = ctx.bounded::<f64>(16 as usize);
         let kt_iter =
             || (0..(seq_len * seq_len)).map(|i| if i % seq_len == 0 { 0.11_f64 } else { 0.1_f64 });
         ctx.add_child(GeneratorContext::new(kt_iter, kt_sender)); // KT: [D,1] shaped vectors
 
         // V = SRAM[T](N) -> As this is a SRAM where we read N*N times, this will be a generator with a N*N long iter
-        let (v_sender, v_receiver) = ctx.bounded::<f64>((seq_len * seq_len) as usize);
+        let (v_sender, v_receiver) = ctx.bounded::<f64>(16 as usize);
         let v_iter =
             || (0..(seq_len * seq_len)).map(|i| if i % seq_len == 0 { 0.11_f64 } else { 0.1_f64 });
         ctx.add_child(GeneratorContext::new(v_iter, v_sender)); // KT: [D,1] shaped vectors
