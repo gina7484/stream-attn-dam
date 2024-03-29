@@ -34,3 +34,6 @@ run_single
 
 LEN=16384   # 5.5 min
 run_single
+
+LEN=32768   # 23 min
+run_single
