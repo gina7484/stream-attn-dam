@@ -16,7 +16,7 @@ run_single() {
 
 cd /home/dam/dam-experiments/stream-attn-dam/
 
-# The total sweep will be 7.5 min
+# The total sweep will be 8 min
 LEN=512     # 0.3 sec
 run_single
 
@@ -35,5 +35,5 @@ run_single
 LEN=16384   # 5.5 min
 run_single
 
-LEN=32768   # 23 min
+LEN=32768   # 45 min
 run_single
