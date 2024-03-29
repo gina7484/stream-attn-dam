@@ -1,0 +1,6 @@
+
+running 1 test
+error: test failed, to rerun pass `-p stream-attn-dam --lib`
+
+Caused by:
+  process didn't exit successfully: `/home/dam/dam-experiments/stream-attn-dam/target/release/deps/stream_attn_dam-e495923a29249994 32768 'test::naive_attn::tests::qkt_red_div_matvec_test' --exact --nocapture` (signal: 9, SIGKILL: kill)

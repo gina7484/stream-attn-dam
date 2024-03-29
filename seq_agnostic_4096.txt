@@ -1,0 +1,8 @@
+
+running 1 test
+test test::seq_agnostic::tests::bounded_seq_agnostic_attn has been running for over 60 seconds
+elapsed cycles: 33554478
+test test::seq_agnostic::tests::bounded_seq_agnostic_attn ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 193.25s
+

@@ -1,0 +1,7 @@
+
+running 1 test
+elapsed cycles: 524334
+test test::seq_agnostic::tests::unbounded_seq_agnostic_attn ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.14s
+
