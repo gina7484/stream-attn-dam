@@ -11,6 +11,7 @@ run_single() {
 
     grep Simulated DAM_run_$LEN.txt
     echo ""
+    rm DAM_run_$LEN.txt
 }
 
 cd /home/dam/dam-experiments/stream-attn-dam/
